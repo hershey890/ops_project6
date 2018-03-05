@@ -22,41 +22,46 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:
-  //float b1 = 1;
-  //float b2 = 2;
-  //float b3 = 3;
-  /*Serial.println('A' + analogRead(button1));
+  float b1 = 1;
+  float b2 = 2;
+  float b3 = 3;
+  Serial.println('A' + analogRead(button1));
   Serial.println('B' + analogRead(button2));
-  Serial.println('C' + analogRead(button3));*/
-  float x = 5.00;
-  sending(x);
-  /*if(!redState && analogRead(button1)) {
+  Serial.println('C' + analogRead(button3));
+
+ if(!redState && analogRead(button1) > 500) {
     sending(b1);
     isRed = true;
     redState = true;
-  } else if(isRed && analogRead(button1) == 0) {
+    Serial.println(b1);
+  } else if(isRed && analogRead(button1) <= 500) {
     sending(4);
     isRed = false;
     redState = false;
+    Serial.println("4");
   }
   
-  if(!yellowState && analogRead(button2)) {
+  if(!yellowState && analogRead(button2) > 500) {
     sending(b2);
     isYellow = true;
     yellowState = true;
-  } else if(isYellow && analogRead(button2) == 0) {
+    Serial.println(b2);
+  } else if(isYellow && analogRead(button2) <= 500) {
     sending(5);
     isYellow = false;
     yellowState = false;
+    Serial.println("5");
   }
   
-  if(!greenState && analogRead(button3)) {
+  if(!greenState && analogRead(button3) > 500) {
     sending(b3);
     isGreen = true;
     greenState = true;
-  } else if(isGreen && analogRead(button3) == 0) {
+    Serial.println(b3);
+  } else if(isGreen && analogRead(button3) <= 500) {
     sending(6);
     isGreen = false;
     greenState = false;
-  }*/
+    Serial.println("6");
+  }
 }
