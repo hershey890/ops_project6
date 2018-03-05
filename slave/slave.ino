@@ -109,7 +109,6 @@ void setup() {
 void loop() {
   if(receiving(incomingbyte)) {
   Serial.println(incomingbyte);
-  /*
     if(incomingbyte == 1) {
       digitalWrite(LED1, HIGH);
       if(!led1_on) {
@@ -229,8 +228,6 @@ void loop() {
           exit(0);
         }
       }
-    }*/
-  } else {
-    Serial.println("nothing to read");
+    }
   }
 }
