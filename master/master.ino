@@ -1,7 +1,7 @@
 #include "transmitter.h"
 #define button1 1
 #define button2 4
-#define button3 7
+#define button3 6
 
 bool isRed = false;
 bool isGreen = false;
@@ -14,10 +14,10 @@ bool greenState = false;
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(9600);
-  transmitter_setup();
   pinMode(button1, INPUT);
   pinMode(button2, INPUT);
   pinMode(button3, INPUT);
+  transmitter_setup();
 }
 
 void loop() {
