@@ -1,4 +1,5 @@
 #include "transmitter.h"
+#include <Wire.h>
 #define button1 1
 #define button2 4
 #define button3 6
@@ -13,6 +14,7 @@ bool greenState = false;
 
 void setup() {
   // put your setup code here, to run once:
+  wire.begin(104);
   Serial.begin(9600);
   pinMode(button1, INPUT);
   pinMode(button2, INPUT);

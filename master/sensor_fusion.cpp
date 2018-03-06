@@ -10,12 +10,24 @@
 
 void readReg(uint8_t reg, uint8_t *buf, size_t len)
 {
-  /* TO DO */
+  Wire.beginTransmission(104);
+  Wire.write(reg);
+  Wire.endTransmission(false);
+  Wire.requestFrom(104, len);
+  for(int i = 0; i < len; i++) {
+    buf[i] = Wire.read();
+  }
+  Wire.endTransmission(true);
 }
 
 void writeReg(uint8_t reg, uint8_t *buf, size_t len)
 {
-  /* TO DO */
+  Wire.beginTransmission(104);
+  Wire.write(reg);
+  for(int i = 0; i < len; i++) {
+    Wire.write(buf[i]);
+  }
+  Wire.endTransmission(true);
 }
 
 float vector_normalize(struct vector *raw, struct vector *unit)
