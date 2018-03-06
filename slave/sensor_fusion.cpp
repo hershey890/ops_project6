@@ -17,7 +17,9 @@ void readReg(uint8_t reg, uint8_t *buf, size_t len)
   for(int i = 0; i < len; i++) {
     buf[i] = Wire.read();
   }
-  Wire.endTransmission(true);
+  int check = Wire.endTransmission(true);
+  //Serial.print("readReg: ");
+  //Serial.println(check);
 }
 
 void writeReg(uint8_t reg, uint8_t *buf, size_t len)
@@ -27,7 +29,9 @@ void writeReg(uint8_t reg, uint8_t *buf, size_t len)
   for(int i = 0; i < len; i++) {
     Wire.write(buf[i]);
   }
-  Wire.endTransmission(true);
+  //Serial.print("writeReg: ");
+  int check2 = Wire.endTransmission(true);
+  //Serial.println(check2);
 }
 
 float vector_normalize(struct vector *raw, struct vector *unit)

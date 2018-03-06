@@ -1,4 +1,268 @@
-#include "receiver.h"
+#include "sensor_fusion.h"
+#include "IMU.h"
+
+#define LED1 9
+#define LED2 10
+#define LED3 11
+
+extern float IMU_X;
+extern float IMU_Y;
+extern float IMU_Z;
+
+float incomingbyte = 0;
+bool led1_on = false;
+bool led2_on = false;
+bool led3_on = false;
+int button_press[100];
+int sequence[100];
+int num_presses = 0;
+int round_length = 0;
+
+void flash_wrong() {
+  delay(500);
+  digitalWrite(LED1, HIGH);
+  delay(500);
+  digitalWrite(LED1, LOW);
+  delay(500);
+}
+
+void flash_right() {
+  delay(500);
+  digitalWrite(LED3, HIGH);
+  delay(500);
+  digitalWrite(LED3, LOW);
+  delay(500);
+}
+
+void flash_red() {
+  digitalWrite(LED1, HIGH);
+  delay(500);
+  digitalWrite(LED1, LOW);
+  delay(100);
+}
+
+void flash_yellow() {
+  digitalWrite(LED2, HIGH);
+  delay(500);
+  digitalWrite(LED2, LOW);
+  delay(100);
+}
+
+void flash_green() {
+  digitalWrite(LED3, HIGH);
+  delay(500);
+  digitalWrite(LED3, LOW);
+  delay(100);
+}
+
+bool compareChars(int correctArray[], int inputArray[], int n1, int n2){
+  for(int i = 0; i < n1; i++)
+  {
+    if(correctArray[i] != inputArray[i])
+      return false;
+  }
+
+  return true;
+}
+
+void displaySequence(int correctArray[], int n1)
+{
+  for(int i = 0; i < n1; i++)
+  {
+    if(correctArray[i] == 1)
+      flash_red();
+    else if(correctArray[i] == 2)
+      flash_yellow();
+    else if(correctArray[i] == 3)
+      flash_green();
+  }
+}
+
+int add_character() {
+  int iLed_color = 0;
+  int rand_number = random(3);
+  switch(rand_number) {
+    case 0:
+      iLed_color = 1;
+      break;
+    case 1:
+      iLed_color = 2;
+      break;
+    case 2:
+      iLed_color = 3;
+      break;
+    default:
+      iLed_color = 1;
+      break;
+  }
+  return(iLed_color);
+}
+
+void setup() {
+  // put your setup code here, to run once:
+  Serial.begin(9600);
+  pinMode(LED1, OUTPUT);
+  pinMode(LED2, OUTPUT);
+  pinMode(LED3, OUTPUT);
+  randomSeed(analogRead(0));
+  sequence[round_length] = add_character();
+  round_length++;
+  displaySequence(sequence, round_length);
+  delay(250);
+  imu_setup();
+
+}
+
+void loop() {
+  imu_loop();
+  Serial.print("X ");
+  Serial.print((int)(IMU_X * 100));
+  Serial.print(" ");
+  Serial.print("Y ");
+  Serial.print((int)(IMU_Y * 100));
+  Serial.print(" ");
+  Serial.print("Z ");
+  Serial.println((int)(IMU_Z * 100));
+  delay(100);
+
+  int value1 = map((int)(IMU_X*100), -100, 100, 0, 255);
+  int value2 = map((int)(IMU_Y*100), -100, 100, 0, 255);
+  int value3 = map((int)(IMU_Z*100), -100, 100, 0, 255);
+
+  analogWrite(LED1, value1);
+  analogWrite(LED2, value2);
+  analogWrite(LED3, value3);
+  /*
+  if(receiving(incomingbyte)) {
+  Serial.println(incomingbyte);
+    if(incomingbyte == 1) {
+      digitalWrite(LED1, HIGH);
+      if(!led1_on) {
+        led1_on = true;
+        //save that button 1 was pressed
+  
+        
+        if(num_presses < round_length) {
+          button_press[num_presses] = incomingbyte;
+          num_presses++;
+        }
+        
+        if(button_press[num_presses-1] != sequence[num_presses-1])
+        {
+          flash_wrong();
+          digitalWrite(LED1, LOW);
+          digitalWrite(LED2, LOW);
+          digitalWrite(LED3, LOW);
+          exit(0);
+        }
+        
+        
+      }
+    }
+    if(incomingbyte == 2) {
+      digitalWrite(LED2, HIGH);
+      if(!led2_on) {
+        led2_on = true;
+        //save that button 1 was pressed
+        if(num_presses < round_length) {
+          button_press[num_presses] = incomingbyte;
+          num_presses++;
+        }
+  
+         if(button_press[num_presses-1] != sequence[num_presses-1])
+        {
+          flash_wrong();
+          digitalWrite(LED1, LOW);
+          digitalWrite(LED2, LOW);
+          digitalWrite(LED3, LOW);
+          exit(0);
+        }
+        
+      }
+    }
+    if(incomingbyte == 3) {
+      digitalWrite(LED3, HIGH);
+      if(!led3_on) {
+        led3_on = true;
+        //save that button 1 was pressed
+        if(num_presses < round_length) {
+          button_press[num_presses] = incomingbyte;
+          num_presses++;
+        }
+  
+         if(button_press[num_presses-1] != sequence[num_presses-1])
+        {
+          flash_wrong();
+          digitalWrite(LED1, LOW);
+          digitalWrite(LED2, LOW);
+          digitalWrite(LED3, LOW);
+          exit(0);
+        }
+        
+      }
+    }
+    if(incomingbyte == 4) {
+      digitalWrite(LED1, LOW);
+      led1_on = false;
+      if(num_presses >= round_length) {
+        if(compareChars(sequence, button_press, round_length, round_length)) {
+          flash_right();
+          //code to progress to the next round
+          sequence[round_length] = add_character();
+          round_length++;
+          displaySequence(sequence, round_length);
+          num_presses = 0;
+          delay(250);
+        } else {
+          flash_wrong();
+          exit(0);
+        }
+      }
+    }
+    if(incomingbyte == 5) {
+      digitalWrite(LED2, LOW);
+      led2_on = false;
+      if(num_presses >= round_length) {
+        if(compareChars(sequence, button_press, round_length, round_length)) {
+          flash_right();
+          //code to progress to the next round
+          sequence[round_length] = add_character();
+          round_length++;
+          displaySequence(sequence, round_length);
+          num_presses = 0;
+          delay(250);
+        } else {
+          flash_wrong();
+          exit(0);
+        }
+      }
+    }
+    if(incomingbyte == 6) {
+      digitalWrite(LED3, LOW);
+      led3_on = false;
+      if(num_presses >= round_length) {
+        if(compareChars(sequence, button_press, round_length, round_length)) {
+          flash_right();
+          //code to progress to the next round
+          sequence[round_length] = add_character();
+          round_length++;
+          displaySequence(sequence, round_length);
+          num_presses = 0;
+          delay(250);
+        } else {
+          flash_wrong();
+          exit(0);
+        }
+      }
+    }
+  }*/
+}
+
+
+
+
+
+/*#include "receiver.h"
 
 #define LED1 2
 #define LED2 3
@@ -230,4 +494,4 @@ void loop() {
       }
     }
   }
-}
+}*/
