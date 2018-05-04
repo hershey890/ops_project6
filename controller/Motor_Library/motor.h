@@ -28,6 +28,6 @@ public:
 	void leftBackward(signed char value);
 	void leftCoast();
 	void leftStop();
-}
+};
 
 #endif

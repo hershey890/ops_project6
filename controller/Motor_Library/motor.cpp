@@ -1,4 +1,5 @@
 #include "motor.h"
+#include "arduino.h"
 
 //==================================================
 //RIGHT MOTOR
