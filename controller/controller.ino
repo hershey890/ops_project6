@@ -36,7 +36,7 @@ void setup() {
   y_calib = y_sum/100;
   z_calib = z_sum/100;
 }
-
+float abc = 0;
 void loop() {
   imu_loop();
   /*Serial.print("X ");
