@@ -12,34 +12,50 @@ void setup()
 {
 	Serial.begin(9600);
   transmitter_setup();
-  Serial.println("transmitter setup ran");
 	imu_setup();
-  Serial.println("imu setup ran");
 }
+
+
 
 void loop()
 {
 	imu_loop();
-  
-  IMU_X *= 100;
-  IMU_Y *= 100;
-  float forward = map(IMU_Y, -100, 100, 10, 60);
-  float scaleLR = map(IMU_X, -100, 100, -forward, forward); //add/sub from the forward to adjust the 
-  //left/right values
-
-  if (IMU_Y <= -10) {
-    int transmitVal = (forward + scaleLR) * 100 + (forward - scaleLR);
-    sending(transmitVal);
-  }
-  else if (IMU_Y > -10 && IMU_Y < 10) //stop code
-    sending(3535);
-  else if (IMU_Y >= 10) {
-    int transmitVal = (forward - scaleLR) * 100 + (forward + scaleLR);
-    sending(transmitVal);
-  }
-
   printXYZ();
+  
+  IMU_X *= 100; //forward orientation
+  IMU_Y *= 100; //left/right orientation
+  
+  float forward = map(IMU_Y, -100, 100, 10, 60);
+  //the value that is being transmitted is in four digits _ _ _ _
+  //the first two digits correspond to the left motor power, second two to the right motor power
+  //10-35 (not incl 35) move forward
+    //10 max forward, 34, min forward
+  //3535 stop
+  //second two digits: 36-60 move backward
+    //36, min backward, 60 max backward
+  float scaleLR = map(IMU_X, -100, 100, -forward, forward); //add/subtract from the forward value to adjust the left/right values
+
+  if (IMU_Y <= -10) { //forward
+    float transmitVal = (forward + scaleLR) * 100 + (forward - scaleLR);
+    //IMU_X - negative -> turn left -> decrease motor right, increase motor left
+       //scaleLR is negative -> first two digits decreased, second two digits increased
+    //IMU_X - positive -> turn right -> increase motor right, decrease motor left
+      //scaleLR is positive, -> first two digits increased, second two digits increased
+    Serial.println(transmitVal);
+    sending(transmitVal);
+  }
+  else if (IMU_Y > -10 && IMU_Y < 10){ //stop
+    Serial.println(3535);
+    sending(3535);
+  }
+  else if (IMU_Y >= 10) { //backward
+    float transmitVal = (forward - scaleLR) * 100 + (forward + scaleLR);
+    Serial.println(transmitVal);
+    sending(transmitVal);
+  }
 }
+
+
 
 void printXYZ() {
 	Serial.print("X ");

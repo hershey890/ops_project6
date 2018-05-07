@@ -2,7 +2,7 @@
 #include "receiver.h"
 #define LED1 4
 
-float rfValue = 0;
+//float rfValue = 0;
 int n = 3;
 
 void setup()
@@ -17,12 +17,20 @@ void setup()
 
 int right = 0, left = 0;
 
-void LED();
-
 void loop()
 {
+  float rfValue = 0;
   motor m;
-  LED();
+
+  if(receiving(rfValue)){
+    Serial.println(rfValue);
+    digitalWrite(LED1, HIGH);  
+  }
+  else {
+    Serial.println("N");
+    digitalWrite(LED1, LOW);
+  }
+  Serial.println(rfValue);
   
   right = rfValue/100 - 10;
   left = int(rfValue)%100 - 10;
@@ -42,16 +50,5 @@ void loop()
     left = (left * 10 - 250)/n;
     m.leftBackward(left);
     m.rightBackward(right);
-  }
-}
-
-void LED() {
-  if(receiving(rfValue)){
-    Serial.println(rfValue);
-    digitalWrite(LED, HIGH);  
-  }
-  else {
-    Serial.println("N");
-    digitalWrite(LED1, LOW);
   }
 }
