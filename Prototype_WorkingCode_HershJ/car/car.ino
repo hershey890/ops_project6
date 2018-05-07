@@ -40,15 +40,15 @@ void loop()
     m.leftStop();
   }
   else if (right < 25 || left < 25) { //forward
-    right = ((right * -1) * 10 + 250)/n;
-    left = ((left * -1) * 10 + 250)/n;
+    right = (250- 10 * right)/n;
+    left = (250 - 10 * left)/n;
     m.leftForward(left);
     m.rightForward(right);
   }
   else if (right > 25 || left > 25) { //reverse
     right = (right * 10 - 250)/n;
     left = (left * 10 - 250)/n;
-    m.leftBackward(left);
+    m.leftBackward(left); 
     m.rightBackward(right);
   }
 }
