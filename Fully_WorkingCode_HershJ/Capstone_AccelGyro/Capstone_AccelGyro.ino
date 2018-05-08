@@ -20,7 +20,7 @@ void setup()
 void loop()
 {
 	imu_loop();
-  printXYZ();
+  //printXYZ();
   
   IMU_X *= 100; //forward orientation
   IMU_Y *= 100; //left/right orientation
@@ -41,16 +41,16 @@ void loop()
        //scaleLR is negative -> first two digits decreased, second two digits increased
     //IMU_X - positive -> turn right -> increase motor right, decrease motor left
       //scaleLR is positive, -> first two digits increased, second two digits increased
-    Serial.println(transmitVal);
+    //Serial.println(transmitVal);
     sending(transmitVal);
   }
-  else if (IMU_Y > -10 && IMU_Y < 10){ //stop
-    Serial.println(3535);
+  else if (IMU_Y > -15 && IMU_Y < 15){ //stop
+    //Serial.println(3535);
     sending(3535);
   }
   else if (IMU_Y >= 10) { //backward
     float transmitVal = (forward - scaleLR) * 100 + (forward + scaleLR);
-    Serial.println(transmitVal);
+    //Serial.println(transmitVal);
     sending(transmitVal);
   }
 }
