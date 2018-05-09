@@ -11,11 +11,11 @@ float y_calib = 0;
 float z_calib = 0;
 
 int getLeft(int val) {
-  return (val/256);
+  return ((val >> 8)&255) - 128;
 }
 
 int getRight(int val) {
-  return (val % 256);
+  return ((val % 256) & 255) - 128;
 }
 
 void setup() {
@@ -39,12 +39,6 @@ void setup() {
 float abc = 0;
 void loop() {
   imu_loop();
-  /*Serial.print("X ");
-  Serial.print((int)((IMU_X - x_calib) * 100));
-  Serial.print(" ");
-  Serial.print("Y ");
-  Serial.print((int)((IMU_Y - y_calib) * 100));
-  Serial.print(" ");*/
   int x = (int)((IMU_X - x_calib) * 100);
   int y = (int)((IMU_Y - y_calib) * 100);
   int sending_data = 0;
@@ -52,20 +46,20 @@ void loop() {
   int right_move = 128;
   if(x > 0) {
     if(x < 10) {
-      left_move = 128;
-    } else if(x >= 90) {
-      left_move = 255;
-    } else {
-      left_move = floor((x-10)*1.6) + 128;
-    }
-  } else {
-    x = x * -1;
-    if(x < 10) {
       right_move = 128;
     } else if(x >= 90) {
       right_move = 255;
     } else {
       right_move = floor((x-10)*1.6) + 128;
+    }
+  } else {
+    x = x * -1;
+    if(x < 10) {
+      left_move = 128;
+    } else if(x >= 90) {
+      left_move = 255;
+    } else {
+      left_move = floor((x-10)*1.6) + 128;
     }
   }
   int remaining = 256 - max(left_move, right_move);
@@ -81,13 +75,13 @@ void loop() {
   }
   left_move -= power;
   right_move -= power;
-  sending_data = left_move * 256;
+  sending_data = left_move << 8;
   sending_data += right_move;
-  /*Serial.print("Left: ");
+  Serial.print("Left: ");
   Serial.print((getLeft((int)sending_data)));
   Serial.print(" ");
   Serial.print("Right: ");
-  Serial.println((getRight((int)sending_data)));*/
-  Serial.println(sizeof(int));
+  Serial.println((getRight((int)sending_data)));
+  sending(sending_data);
 }
   

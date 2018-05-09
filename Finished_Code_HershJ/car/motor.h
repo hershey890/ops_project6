@@ -16,16 +16,16 @@ public:
 	//=========================================================
 	//RIGHT MOTOR
 	//=========================================================
-	void rightForward(signed char value); // Moves the 'right' motor forward by a value 0 - 255
-	void rightBackward(signed char value); 	//Moves the 'right' motor backward by a value 0-255
+	void rightForward(unsigned char value); // Moves the 'right' motor forward by a value 0 - 255
+	void rightBackward(unsigned char value); 	//Moves the 'right' motor backward by a value 0-255
 	void rightCoast(); //Makes the right motor 'coast' or unabruptly slow to a stop
 	void rightStop(); //forces the right motor to stop
 
 	//=========================================================
 	//LEFT MOTOR
 	//=========================================================
-	void leftForward(signed char value);
-	void leftBackward(signed char value);
+	void leftForward(unsigned char value);
+	void leftBackward(unsigned char value);
 	void leftCoast();
 	void leftStop();
 };

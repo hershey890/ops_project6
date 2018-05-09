@@ -21,6 +21,6 @@ void transmitter_setup();
  * radio. Prints "sending [val] ... ok..." upon success
  * and prints "sending [val] ... failed..." upon failure. 
  */
-void sending(float tex);
+void sending(int tex);
 
 #endif

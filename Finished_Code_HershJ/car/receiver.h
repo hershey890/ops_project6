@@ -20,6 +20,6 @@ void receiver_setup();
 /* Returns true if there is data to read and stores the data into val; 
  * otherwise returns false.
  */
-bool receiving(float& val);
+bool receiving(int& val);
 
 #endif

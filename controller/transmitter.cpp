@@ -21,7 +21,7 @@ void transmitter_setup() {
   radio.printDetails();
 }
 
-void sending(float tex)
+void sending(int tex)
 {
     // First, stop listening so we can talk.
     radio.stopListening();
@@ -29,12 +29,12 @@ void sending(float tex)
     // Take the time, and send it.  This will block until complete
     
     printf("Now sending...");
-    bool ok = radio.write( &tex, sizeof(float) );
+    bool ok = radio.write( &tex, sizeof(int) );
     
-    if (ok)
+    /*if (ok)
       printf("ok...\n");
     else
-      printf("failed.\n\r");
+      printf("failed.\n\r");*/
 
     radio.startListening();
 }
