@@ -20,7 +20,7 @@ void setup()
 void loop()
 {
 	imu_loop();
-  //printXYZ();
+  printXYZ();
   
   IMU_X *= 100; //forward orientation
   IMU_Y *= 100; //left/right orientation
@@ -44,9 +44,14 @@ void loop()
     //Serial.println(transmitVal);
     sending(transmitVal);
   }
-  else if (IMU_Y > -15 && IMU_Y < 15){ //stop
+  //else if (IMU_Y > -15 && IMU_Y < 15){ //stop
+  else if (IMU_Y > -15 && IMU_Y < 15 && IMU_X > -15 && IMU_X < 15){ //stop
     //Serial.println(3535);
     sending(3535);
+  }
+  else if (IMU_Y > -15 && IMU_Y < 15) {// && IMU_X < -15 || IMU_X > 15) { //rotating in place
+    float transmitVal = (35 + IMU_X * .25) * 100 + (35 - IMU_X * .25);
+    sending(transmitVal);
   }
   else if (IMU_Y >= 10) { //backward
     float transmitVal = (forward - scaleLR) * 100 + (forward + scaleLR);
