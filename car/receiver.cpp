@@ -23,11 +23,11 @@ void receiver_setup() {
   radio2.printDetails();
 }
 
-bool receiving(float &val) {
+bool receiving(int &val) {
     // if there is data ready
     bool result;
     if ( radio2.available() ) {
-      result = radio2.read(&val, sizeof(float));
+      result = radio2.read(&val, sizeof(int));
       //printf(" %d \n", val);
       return result;
     }

@@ -2,12 +2,9 @@
 #include "receiver.h"
 #define LED1 4
 
-float rfValue = 0;
-int n = 3;
-
 void setup()
 {
-	Serial.begin(9600);
+  Serial.begin(9600);
   motor m;
   //Set motors to coast
   m.leftStop();
@@ -15,43 +12,44 @@ void setup()
   receiver_setup();
 }
 
+int val;
+
 int right = 0, left = 0;
 
-void LED();
+int straight_max_speed = 250;
+int turning_max_speed = 250;
 
 void loop()
 {
+  val = 0;
   motor m;
-  LED();
-  
-  right = rfValue/100 - 10;
-  left = int(rfValue)%100 - 10;
-
-  if (right == 25 && left == 25) { //stop
-    m.rightStop();
-    m.leftStop();
-  }
-  else if (right < 25 || left < 25) { //forward
-    right = ((right * -1) * 10 + 250)/n;
-    left = ((left * -1) * 10 + 250)/n;
-    m.leftForward(right);
-    m.rightForward(left);
-  }
-  else if (right > 25 || left > 25) { //reverse
-    right = (right * 10 - 250)/n;
-    left = (left * 10 - 250)/n;
-    m.leftBackward(right);
-    m.rightBackward(right);
-  }
-}
-
-void LED() {
-  if(receiving(rfValue)){
-    Serial.println(rfValue);
-    digitalWrite(LED, HIGH);  
-  }
-  else {
-    Serial.println("N");
-    digitalWrite(LED1, LOW);
+  receiving(val);
+  int dir = val/100;
+  int pwr = val%100;
+  int power;
+  if(dir%2 == 0)
+    power = map(pwr, 0, 99, 0, straight_max_speed);
+  else
+    power = map(pwr, 0, 99, 0, turning_max_speed);
+  switch(dir) {
+    case 1:
+      m.leftForward(power);
+      m.rightForward(power);
+      break;
+    case 2:
+      m.rightForward(power);
+      m.leftBackward(power);
+      break;
+    case 3:
+      m.rightBackward(power);
+      m.leftBackward(power);
+      break;
+    case 4:
+      m.leftForward(power);
+      m.rightBackward(power);
+      break;
+    default:
+      m.leftStop();
+      m.rightStop();
   }
 }

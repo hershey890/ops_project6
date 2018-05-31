@@ -31,10 +31,10 @@ void sending(int tex)
     printf("Now sending...");
     bool ok = radio.write( &tex, sizeof(int) );
     
-    /*if (ok)
+    if (ok)
       printf("ok...\n");
     else
-      printf("failed.\n\r");*/
+      printf("failed.\n\r");
 
     radio.startListening();
 }
