@@ -28,7 +28,7 @@ bool receiving(float &val) {
     bool result;
     if ( radio2.available() ) {
       result = radio2.read(&val, sizeof(float));
-      //printf(" %d \n", val);
+      printf(" %d \n", val);
       return result;
     }
   

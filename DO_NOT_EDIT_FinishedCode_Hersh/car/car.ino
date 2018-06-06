@@ -13,7 +13,7 @@ void setup()
   //Set motors to coast
   m.leftStop();
   m.rightStop();
-  receiver_setup();8
+  receiver_setup();
 }
 
 int right = 0, left = 0;
